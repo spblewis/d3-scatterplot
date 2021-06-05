@@ -1,6 +1,10 @@
 const {
   json,
   select,
+  scaleTime,
+  min,
+  max,
+  axisBottom,
 // eslint-disable-next-line no-undef
 } = d3;
 
@@ -23,10 +27,23 @@ const getminutes = (string) => new Date(string);
 
 json(url)
   .then((data) => {
-    // x-axis
+    // x-axis (year)
+    const xScale = scaleTime()
+      .domain(
+        [min(data, (d) => getYear(d.Year)),
+          max(data, (d) => getYear(d.Year)),
+        ],
+      )
+      .range([padding, width - padding]);
+
+    const xAxis = axisBottom(xScale);
+
     svg.append('g')
-      .attr('id', 'x-axis');
-    // y-axis
+      .attr('id', 'x-axis')
+      .attr('transform', `translate(0, ${height - padding})`)
+      .call(xAxis);
+
+    // y-axis (minutes)
     svg.append('g')
       .attr('id', 'y-axis');
     // Adding datapoints
