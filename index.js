@@ -5,6 +5,7 @@ const {
   min,
   max,
   axisBottom,
+  axisLeft,
 // eslint-disable-next-line no-undef
 } = d3;
 
@@ -23,7 +24,7 @@ const getYear = (number) => new Date(number, 0);
 /* I'm not sure about this one... needs to return date object to map times of riders.
   Format for input is 'mm:ss', from data.Time.  Could also rewrite to pass in data.Seconds,
   which is a number. */
-const getminutes = (string) => new Date(string);
+const getMinutes = (seconds) => new Date(seconds * 1000);
 
 json(url)
   .then((data) => {
@@ -44,8 +45,20 @@ json(url)
       .call(xAxis);
 
     // y-axis (minutes)
+    const yScale = scaleTime()
+      .domain(
+        [min(data, (d) => getMinutes(d.Seconds).getTime()),
+          max(data, (d) => getMinutes(d.Seconds).getTime()),
+        ],
+      )
+      .range([height - padding, padding]);
+
+    const yAxis = axisLeft(yScale);
+
     svg.append('g')
-      .attr('id', 'y-axis');
+      .attr('id', 'y-axis')
+      .attr('transform', `translate(${padding}, 0)`)
+      .call(yAxis);
     // Adding datapoints
     svg.selectAll('circle')
       .data(data)
