@@ -19,20 +19,20 @@ const svg = select('svg')
 
 const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json';
 
-const getYear = (number) => new Date(number, 0);
+const theYear = (number) => new Date(number, 0);
 
 /* I'm not sure about this one... needs to return date object to map times of riders.
   Format for input is 'mm:ss', from data.Time.  Could also rewrite to pass in data.Seconds,
   which is a number. */
-const getMinutes = (seconds) => new Date(seconds * 1000);
+const theMinutes = (seconds) => new Date(seconds * 1000);
 
 json(url)
   .then((data) => {
     // x-axis (year)
     const xScale = scaleTime()
       .domain(
-        [min(data, (d) => getYear(d.Year)),
-          max(data, (d) => getYear(d.Year)),
+        [min(data, (d) => theYear(d.Year)),
+          max(data, (d) => theYear(d.Year)),
         ],
       )
       .range([padding, width - padding]);
@@ -47,8 +47,8 @@ json(url)
     // y-axis (minutes)
     const yScale = scaleTime()
       .domain(
-        [min(data, (d) => getMinutes(d.Seconds).getTime()),
-          max(data, (d) => getMinutes(d.Seconds).getTime()),
+        [min(data, (d) => theMinutes(d.Seconds)),
+          max(data, (d) => theMinutes(d.Seconds)),
         ],
       )
       .range([height - padding, padding]);
@@ -65,8 +65,8 @@ json(url)
       .enter()
       .append('circle')
       .attr('class', 'dot')
-      .attr('cx', 100)
-      .attr('cy', 100)
+      .attr('cx', (d) => xScale(theYear(d.Year)))
+      .attr('cy', (d) => yScale(theMinutes(d.Seconds)))
       .attr('r', '5px');
 
     document.getElementById('dummy').innerHTML = JSON.stringify(data);
