@@ -23,10 +23,18 @@ const getminutes = (string) => new Date(string);
 
 json(url)
   .then((data) => {
+    // x-axis
+    svg.append('g')
+      .attr('id', 'x-axis');
+    // y-axis
+    svg.append('g')
+      .attr('id', 'y-axis');
+    // Adding datapoints
     svg.selectAll('circle')
       .data(data)
       .enter()
       .append('circle')
+      .attr('class', 'dot')
       .attr('cx', 100)
       .attr('cy', 100)
       .attr('r', '5px');
