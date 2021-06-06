@@ -6,6 +6,7 @@ const {
   max,
   axisBottom,
   axisLeft,
+  scaleLinear,
 // eslint-disable-next-line no-undef
 } = d3;
 
@@ -24,7 +25,7 @@ const theYear = (number) => new Date(number, 0);
 /* I'm not sure about this one... needs to return date object to map times of riders.
   Format for input is 'mm:ss', from data.Time.  Could also rewrite to pass in data.Seconds,
   which is a number. */
-const theMinutes = (seconds) => new Date(seconds * 1000);
+const theTime = (seconds) => new Date(seconds * 1000);
 
 json(url)
   .then((data) => {
@@ -45,15 +46,16 @@ json(url)
       .call(xAxis);
 
     // y-axis (minutes)
-    const yScale = scaleTime()
+    const yScale = scaleLinear()
       .domain(
-        [min(data, (d) => theMinutes(d.Seconds)),
-          max(data, (d) => theMinutes(d.Seconds)),
+        [min(data, (d) => theTime(d.Seconds)),
+          max(data, (d) => theTime(d.Seconds)),
         ],
       )
       .range([height - padding, padding]);
 
-    const yAxis = axisLeft(yScale);
+    const yAxis = axisLeft(yScale)
+      .tickFormat((x) => `${Math.floor(x / 60000)}:${((x / 1000) % 60).toString().padEnd(2, '0')}`);
 
     svg.append('g')
       .attr('id', 'y-axis')
@@ -67,7 +69,7 @@ json(url)
       .append('circle')
       .attr('class', 'dot')
       .attr('cx', (d) => xScale(theYear(d.Year)))
-      .attr('cy', (d) => yScale(theMinutes(d.Seconds)))
+      .attr('cy', (d) => yScale(theTime(d.Seconds)))
       .attr('r', '5px');
 
     document.getElementById('dummy').innerHTML = JSON.stringify(data);
