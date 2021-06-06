@@ -22,7 +22,7 @@ const svg = select('svg')
 
 const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json';
 
-const color = scaleOrdinal(['red', 'green']);
+const color = scaleOrdinal(['#f05365', '#de9e36']);
 
 const tooltip = select('body')
   .append('div')
