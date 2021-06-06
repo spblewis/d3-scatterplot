@@ -7,6 +7,7 @@ const {
   max,
   axisBottom,
   axisLeft,
+  scaleOrdinal,
 // eslint-disable-next-line no-undef
 } = d3;
 
@@ -19,6 +20,8 @@ const svg = select('svg')
   .attr('width', width);
 
 const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json';
+
+const color = scaleOrdinal(['green', 'red']);
 
 const theYear = (number) => new Date(number, 0);
 
@@ -33,7 +36,7 @@ json(url)
     const xScale = scaleTime()
       .domain(
         [min(data, (d) => theYear(d.Year - 1)),
-          max(data, (d) => theYear(d.Year)),
+          max(data, (d) => theYear(d.Year + 1)),
         ],
       )
       .range([padding, width - padding]);
@@ -62,6 +65,10 @@ json(url)
       .attr('transform', `translate(${padding}, 0)`)
       .call(yAxis);
 
+    // legend
+    const legend = svg.append('g')
+      .attr('id', 'legend');
+
     // Adding datapoints
     svg.selectAll('circle')
       .data(data)
@@ -72,7 +79,8 @@ json(url)
       .attr('data-yvalue', (d) => theTime(d.Seconds))
       .attr('cx', (d) => xScale(theYear(d.Year)))
       .attr('cy', (d) => yScale(theTime(d.Seconds)))
-      .attr('r', '5px');
+      .attr('r', '5px')
+      .attr('fill', (d) => color(!d.Doping));
 
     document.getElementById('dummy').innerHTML = JSON.stringify(data);
   });
