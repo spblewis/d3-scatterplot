@@ -31,7 +31,7 @@ json(url)
     // x-axis (year)
     const xScale = scaleTime()
       .domain(
-        [min(data, (d) => theYear(d.Year)),
+        [min(data, (d) => theYear(d.Year - 1)),
           max(data, (d) => theYear(d.Year)),
         ],
       )
@@ -59,6 +59,7 @@ json(url)
       .attr('id', 'y-axis')
       .attr('transform', `translate(${padding}, 0)`)
       .call(yAxis);
+
     // Adding datapoints
     svg.selectAll('circle')
       .data(data)
