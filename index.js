@@ -2,11 +2,11 @@ const {
   json,
   select,
   scaleTime,
+  timeFormat,
   min,
   max,
   axisBottom,
   axisLeft,
-  scaleLinear,
 // eslint-disable-next-line no-undef
 } = d3;
 
@@ -46,7 +46,7 @@ json(url)
       .call(xAxis);
 
     // y-axis (minutes)
-    const yScale = scaleLinear()
+    const yScale = scaleTime()
       .domain(
         [min(data, (d) => theTime(d.Seconds)),
           max(data, (d) => theTime(d.Seconds)),
@@ -55,7 +55,7 @@ json(url)
       .range([padding, height - padding]);
 
     const yAxis = axisLeft(yScale)
-      .tickFormat((x) => `${Math.floor(x / 60000)}:${((x / 1000) % 60).toString().padEnd(2, '0')}`);
+      .tickFormat((d) => timeFormat('%M:%S')(d));
 
     svg.append('g')
       .attr('id', 'y-axis')
@@ -68,6 +68,8 @@ json(url)
       .enter()
       .append('circle')
       .attr('class', 'dot')
+      .attr('data-xvalue', (d) => theYear(d.Year))
+      .attr('data-yvalue', (d) => theTime(d.Seconds))
       .attr('cx', (d) => xScale(theYear(d.Year)))
       .attr('cy', (d) => yScale(theTime(d.Seconds)))
       .attr('r', '5px');
