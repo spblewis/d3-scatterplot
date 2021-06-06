@@ -89,7 +89,8 @@ json(url)
           .attr('data-year', () => theYear(d.Year))
           .style('left', () => `${d3.event.pageX + 10}px`)
           .style('top', () => `${d3.event.pageY - 50}px`)
-          .html(`<p>Name: ${d.Name}  Place: ${d.Place} Time: ${d.Time}</p>
+          .html(`<p>${d.Name} (${d.Nationality})</p>  
+            <p>Place: ${d.Place} Time: ${d.Time}</p>
             <p>${d.Doping}</p>`);
       })
       .on('mouseout', () => {
