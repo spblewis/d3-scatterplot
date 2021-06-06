@@ -72,6 +72,27 @@ json(url)
     const legend = svg.append('g')
       .attr('id', 'legend');
 
+    legend.selectAll('rect')
+      .data([false, true])
+      .enter()
+      .append('rect')
+      .attr('x', width - (padding * 4) - 12)
+      .attr('y', (_d, i) => (padding * 2) + (12 * i))
+      .attr('height', 10)
+      .attr('width', 10)
+      .attr('fill', (d) => (color(d)));
+
+    legend.selectAll('text')
+      .data([false, true])
+      .enter()
+      .append('text')
+      .text((d) => (!d ? 'Riders with doping allegations' : 'Riders with no doping allegations'))
+      .attr('x', width - (padding * 4))
+      .attr('y', (_d, i) => (padding * 2) + (12 * (i + 1) - 2))
+      .attr('height', 10)
+      .attr('width', padding)
+      .attr('class', 'legend-text');
+
     // Adding datapoints
     svg.selectAll('circle')
       .data(data)
@@ -96,6 +117,4 @@ json(url)
       .on('mouseout', () => {
         tooltip.style('display', 'none');
       });
-
-    document.getElementById('dummy').innerHTML = JSON.stringify(data);
   });
