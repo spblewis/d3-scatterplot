@@ -52,7 +52,7 @@ json(url)
           max(data, (d) => theTime(d.Seconds)),
         ],
       )
-      .range([height - padding, padding]);
+      .range([padding, height - padding]);
 
     const yAxis = axisLeft(yScale)
       .tickFormat((x) => `${Math.floor(x / 60000)}:${((x / 1000) % 60).toString().padEnd(2, '0')}`);
